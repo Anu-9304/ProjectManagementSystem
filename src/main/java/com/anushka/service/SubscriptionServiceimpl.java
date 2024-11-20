@@ -13,8 +13,7 @@ import com.anushka.repository.SubscriptionRepository;
 @Service
 public class SubscriptionServiceimpl implements SubscriptionService{
 
-    @Autowired
-    private UserService userService;
+    
     @Autowired
     private SubscriptionRepository subscriptionRepository;
 

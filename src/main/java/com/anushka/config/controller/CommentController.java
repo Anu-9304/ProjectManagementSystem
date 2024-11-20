@@ -20,16 +20,20 @@ import com.anushka.model.User;
 import com.anushka.service.CommentService;
 import com.anushka.service.UserService;
 
-public class CommentController {
-    @RestController
-    @RequestMapping("/api/comments")
+import com.anushka.config.response.MessageResponse;
 
-    public class CommentController {
+
+@RestController
+@RequestMapping("/api/comments")
+public class CommentController {
+
+    
         @Autowired
         private CommentService commentService;
+
         @Autowired
         private UserService userService;
-    }
+    
     
     @PostMapping()
     public ResponseEntity<Comment> createComment(
@@ -52,7 +56,7 @@ public class CommentController {
     }
 
     @DeleteMapping("/{commentId}")
-    public ResponseEntity<MessageResponse> deleteComment(@PathVariable Long commentId,
+    public ResponseEntity<MessageResponse>deleteComment(@PathVariable Long commentId,
 
     @RequestHeader("Authorization") String jwt)
 
@@ -71,9 +75,9 @@ public class CommentController {
 
     @GetMapping("/{issued}")
 
-    public ResponseEntity<List<Comment>> getCommentsByIssueId(@PathVariable Long issueld) {
+    public ResponseEntity<List<Comment>> getCommentsByIssueId(@PathVariable Long issueId) throws Exception {
 
-    List<Comment> comments=commentService.findCommentByIssueId(issueld);
+    List<Comment> comments=commentService.findCommentByIssueId(issueId);
 
     return new ResponseEntity<>(comments, HttpStatus.OK);
 

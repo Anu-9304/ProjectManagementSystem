@@ -15,13 +15,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.anushka.config.request.IssueRequest;
-import com.anushka.config.response.AuthResponse;
+//import com.anushka.config.response.AuthResponse;
 import com.anushka.model.Issue;
 import com.anushka.model.IssueDTO;
-import com.anushka.model.Message;
+//import com.anushka.model.Message;
 import com.anushka.model.User;
 import com.anushka.service.IssueService;
 import com.anushka.service.UserService;
+
+import com.anushka.config.response.MessageResponse;
 
 @RestController
 @RequestMapping("/api/issues")
@@ -49,7 +51,7 @@ public class IssueController {
                                                 @RequestHeader("Authorization") String token)
         throws Exception {
         User tokenUser = userService.findUserProfileByJwt(token);
-        User user=userService.findUserById(tokenUser.getId());
+        
 
     
 
@@ -60,7 +62,7 @@ public class IssueController {
             issueDTO.setId(createdIssue.getId());
             issueDTO.setPriority(createdIssue.getPriority());
             issueDTO.setProject(createdIssue.getProject());
-            issueDTO.setProjectID(createdIssue.getProjectId());
+            //issueDTO.setProjectID(createdIssue.getProjectId());
             issueDTO.setStatus(createdIssue.getStatus());
             issueDTO.setTitle(createdIssue.getTitle());
             issueDTO.setTags(createdIssue.getTags());
@@ -69,7 +71,7 @@ public class IssueController {
             return ResponseEntity.ok(issueDTO);
     }        
 
-    @DeleteMapping("/(issueId}")
+    @DeleteMapping("/{issueId}")
     public ResponseEntity<MessageResponse> deleteIssue(@PathVariable Long issueld,
                                                     @RequestHeader("Authorization") String token)
             throws Exception {
@@ -93,7 +95,7 @@ throws Exception {
     return ResponseEntity.ok(issue);
 }
 
-@PutMapping("/{issueId}/status/{status")
+@PutMapping("/{issueId}/status/{status}")
 
 public ResponseEntity<Issue>updateIssueStatus(@PathVariable String status,@PathVariable Long issueId) 
 
