@@ -7,6 +7,7 @@ import com.anushka.model.User;
 import com.anushka.repository.UserRepository;
 //import com.anushka.service.CustomUserDetailsImpl;
 import com.anushka.service.CustomUserDetailsImpl;
+import com.anushka.service.SubscriptionService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -36,11 +37,13 @@ public class AuthController {
     @Autowired
     private CustomUserDetailsImpl customUserDetails;
 
+    @Autowired
+    private SubscriptionService subscriptionService;
+
     @PostMapping("/signup")
     public ResponseEntity<AuthResponse>createUserHandler(@RequestBody User user) throws Exception{
 
         User isUserExist= userRepository.findByEmail(user.getEmail());
-
 
         if(isUserExist!=null){
             throw new Exception("Email already exists with another account");
@@ -52,8 +55,10 @@ public class AuthController {
         createdUser.setEmail(user.getEmail());
         createdUser.setFullName(user.getFullName());
 
-        //User savedUser= userRepository.save(createdUser);
+        User savedUser= userRepository.save(createdUser);
 
+        subscriptionService.createSubscription(savedUser);
+        
         Authentication authentication= new UsernamePasswordAuthenticationToken(user.getEmail(), user.getPassword());
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
