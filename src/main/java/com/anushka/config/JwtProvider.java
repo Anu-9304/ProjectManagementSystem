@@ -12,7 +12,7 @@ import javax.crypto.SecretKey;
  import io.jsonwebtoken.Jwts;
  import io.jsonwebtoken.Claims;
  import io.jsonwebtoken.security.Keys;
- import io.jsonwebtoken.SignatureAlgorithm;
+ //import io.jsonwebtoken.SignatureAlgorithm;
 
  import org.springframework.security.core.Authentication;
 
@@ -26,6 +26,8 @@ public class JwtProvider {
 
         
 
+
+        @SuppressWarnings("deprecation")
         String jwt= Jwts.builder().setIssuedAt(new Date())
              .setExpiration(new Date(new Date().getTime()+86400000))
              .claim("email",auth.getName())
@@ -38,7 +40,11 @@ public class JwtProvider {
 
     public static String getEmailFromToken(String jwt){
 
-        Claims claims=Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(jwt).getBody();
+        Claims claims= Jwts.parser()
+                .verifyWith(key)
+                .build()
+                .parseSignedClaims(jwt)
+                .getPayload();
         
         return String.valueOf(claims.get("email"));
 

@@ -1,8 +1,11 @@
     package com.anushka.service;
 
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.anushka.config.JwtProvider;
 import com.anushka.model.User;
 import com.anushka.repository.UserRepository;
 
@@ -14,24 +17,34 @@ public class UserServiceImpl implements UserService{
 
     @Override
     public User findUserProfileByJwt(String jwt) throws Exception {
-        return null;
+        String email=JwtProvider.getEmailFromToken(jwt);
+        return findUserByEmail(email);
     }
 
     @Override
     public User findUserByEmail(String email) throws Exception {
-        User user=
+        User user= userRepository.findByEmail(email);
+        if(user==null)
+        {
+            throw new Exception("User not found");
+        }
+        return user;
     }
 
     @Override
     public User findUserById(Long userId) throws Exception {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'findUserById'");
+        Optional<User> optionalUser=userRepository.findById(userId);
+        if(optionalUser.isEmpty()){
+            throw new Exception("User not found");
+        }
+        return optionalUser.get();
     }
 
     @Override
     public User updateUsersProjectSize(User user, int number) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'updateUsersProjectSize'");
-    }
+        user.setProjectSize(user.getProjectSize()+number);
+
+        return userRepository.save(user);
+    } 
 
 }
